@@ -12,3 +12,5 @@ QByteArray log_out(QString login, QString password){
 QByteArray reg(QString login, QString password){
     return QByteArray("Регистрация!.!\r\n");
 }
+
+
