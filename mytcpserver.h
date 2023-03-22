@@ -22,9 +22,9 @@ public slots:
 
     void slotServerRead();
     //void slotReadClient();
-    void parsing(QString data_from_client);
-    void auth(QString log, QString pass);
-    void reg(QString log, QString pass, QString name);
+//    void parsing(QString data_from_client);
+//    void auth(QString log, QString pass);
+//    void reg(QString log, QString pass, QString name);
 private:
     QTcpServer * mTcpServer;
     QTcpSocket * mTcpSocket;
