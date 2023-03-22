@@ -18,4 +18,10 @@ QByteArray log_in(QString login, QString password);
 ///
 QByteArray log_out(QString login, QString password);
 
+/// \brief reg отвечавет за регистрацию в системе
+/// \param QString login, QString password
+/// \return QByteArray response
+///
+QByteArray reg(QString login, QString password);
+
 #endif // FUNCTIONS_H

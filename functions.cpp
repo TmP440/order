@@ -9,4 +9,6 @@ QByteArray log_out(QString login, QString password){
     return QByteArray("Выход из системы!.!\r\n");
 }
 
-QByteArray
+QByteArray reg(QString login, QString password){
+    return QByteArray("Регистрация!.!\r\n");
+}
