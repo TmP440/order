@@ -4,11 +4,13 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
+#include <QMap>
+#include <QString>
 #include <QtNetwork>
 #include <QByteArray>
 #include <QDebug>
 /// <summary>
-/// 
+///
 /// </summary>
 class MyTcpServer : public QObject
 {
@@ -21,13 +23,9 @@ public slots:
     void slotClientDisconnected();
 
     void slotServerRead();
-    //void slotReadClient();
-//    void parsing(QString data_from_client);
-//    void auth(QString log, QString pass);
-//    void reg(QString log, QString pass, QString name);
 private:
     QTcpServer * mTcpServer;
-    QTcpSocket * mTcpSocket;
+    QVector<QTcpSocket*> mTcpSocket;
     int server_status;
 };
 #endif // MYTCPSERVER_H

@@ -14,7 +14,7 @@ QByteArray reg(QString login, QString password){
 }
 
 QByteArray invalid_request(){
-    return QByteArray("Ошибка! Такой команды нет\n или неверное кол-во коканд");
+    return QByteArray("Ошибка! Такой команды нет или неверное кол-во коканд\r\n");
 }
 
 QByteArray change_password(QString old_pass, QString new_pass_1, QString new_pass_2){
