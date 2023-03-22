@@ -1,13 +1,11 @@
 #include "functions.h"
-#include <iostream>
-#include <Windows.h>
 
 
 QByteArray log_in(QString login, QString password){
     return QByteArray("Авторизация!.!\r\n");
 }
 
-QByteArray log_out(QString login, QString password){
+QByteArray log_out(){
     return QByteArray("Выход из системы!.!\r\n");
 }
 
@@ -32,11 +30,12 @@ QByteArray check_task(int, QString){
 }
 
 void parsing(QString command){
-    QStringList parts = command.split(" ");
-    std::cout << &parts;
-}
+    QStringList parts = command.left(command.length() - 2).split(" ");
+    if (parts[0] == "login") log_in(parts[1], parts[2]);
+    else if (parts[0] == "logout") log_out();
+    else if (parts[0] == "change_password") change_password(parts[1], parts[2], parts[3]);
+    else if (parts[0] == "start_task") start_task(parts[1]);
+    else if (parts[0] == "check_task") check_task(parts[1].toInt(), parts[2]);
+    else invalid_request();
 
-int main() {
-    parsing("Привет как дела");
-    return 0;
 }
