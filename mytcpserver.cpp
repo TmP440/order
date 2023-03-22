@@ -40,7 +40,7 @@ void MyTcpServer::slotServerRead(){
         str += array;
     }
     array = "";
-    array.append(str);
+    //array.append(str);
     mTcpSocket->write(array);
 }
 
