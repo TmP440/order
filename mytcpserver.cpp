@@ -34,13 +34,13 @@ void MyTcpServer::slotNewConnection(){
 
 void MyTcpServer::slotServerRead(){
     QByteArray array;
-    Qstring str;
+    QString str;
     while(mTcpSocket->bytesAvailable()>0){
         array = mTcpSocket->readAll();
         str += array;
     }
     array = "";
-    array.append(str);
+    //array.append(str);
     mTcpSocket->write(array);
 }
 
