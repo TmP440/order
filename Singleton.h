@@ -1,5 +1,5 @@
-#ifndef Singlton
-#define Singlton
+#ifndef Singlton_h
+#define Singlton_h
 #include<QDebug>
 class Singleton;
 
@@ -8,8 +8,13 @@ class SingletonDestroyer
     private:
         Singleton * p_instance;
     public:
-        ~SingletonDestroyer() { delete p_instance; qDebug()<<"~SingletonDestroyer"; }
-        void initialize(Singleton * p){p_instance = p;};
+        ~SingletonDestroyer() {
+            delete p_instance; 
+            qDebug()<<"~SingletonDestroyer"; 
+        }
+        void initialize(Singleton * p){
+            p_instance = p;
+        };
 };
 
 

@@ -1,5 +1,5 @@
-#ifndef db
-#define db
+#ifndef db_h
+#define db_h
 
 #include <QCoreApplication>
 
@@ -14,10 +14,11 @@
 class MyDB : public Singleton
 {
 private:
-    MyDB() = delete;
+    MyDB() {}
+    MyDB& operator=(MyDB&) = delete;
     MyDB(const MyDB &Db) = delete;
     static QSqlDatabase mydb;
-    static QSqlQuery query;
+    //static QSqlQuery query;
 
     static void openDB(){
         qDebug()<<"MyDB()\n";
@@ -28,11 +29,11 @@ private:
     }
 public:
     static QString query_select(){
-        query = QSqlQuery(mydb);
+        QSqlQuery query(mydb);
         query.exec("SELECT * FROM User");
         if (query.next()) {
             QSqlRecord rec = query.record();
-            const int loginIndex = rec.indexOf("login");//номер "столбца"
+            const int loginIndex = rec.indexOf("login"); // номер "столбца"
             const int passwordIndex = rec.indexOf("password");
             return query.value(loginIndex).toString()+" "+query.value(passwordIndex).toString();
         } else
@@ -44,20 +45,21 @@ public:
             mydb.close();
         qDebug()<<"~MyDB";
     }
-    static Singleton* getInstance(){
+
+    static MyDB* getInstance(){
         if (!mydb.isOpen())
         {
-            Singleton::getInstance();
             openDB();
         }
-        return Singleton::getInstance();
+        return (MyDB*)Singleton::getInstance();
     }
     static void close(){
         if(mydb.isOpen())
             mydb.close();
     }
 };
-QSqlDatabase db::mydb;
-QSqlQuery db::query;
+
+QSqlDatabase MyDB::mydb;
+//QSqlQuery db::query;
 
 #endif

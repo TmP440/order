@@ -11,10 +11,10 @@ int main(int argc, char *argv[])
 {
 
     QCoreApplication a(argc, argv);
-    db::getInstance();
-    qDebug()<<db::query_select();
-    db::close();
-    qDebug()<<db::query_select();
+    MyDB::getInstance();
+    qDebug()<<MyDB::query_select();
+    MyDB::close();
+    qDebug()<< MyDB::query_select();
     exit(0);
 
     return a.exec();
