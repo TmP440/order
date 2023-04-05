@@ -5,17 +5,14 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QSqlRecord>
-#include "db.h"
+#include "singletonClient.h"
 
 int main(int argc, char *argv[])
 {
-
     QCoreApplication a(argc, argv);
-    MyDB::getInstance();
-    qDebug()<<MyDB::query_select();
-    MyDB::close();
-    qDebug()<< MyDB::query_select();
-    exit(0);
+    SingletonClient::getInstance();
+    SingletonClient::getInstance()->send_msg_to_server("1234");
+
 
     return a.exec();
 }
