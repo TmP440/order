@@ -1,17 +1,14 @@
 #include <QCoreApplication>
 #include <QVariant>
 #include <QDebug>
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSqlRecord>
-#include "singletonClient.h"
+#include "SingletonClient.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     SingletonClient::getInstance();
-    SingletonClient::getInstance()->send_msg_to_server("1234");
+   
+   // SingletonClient::getInstance()->send_msg_to_server("auth&user&123");
 
 
     return a.exec();

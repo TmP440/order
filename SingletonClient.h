@@ -11,11 +11,15 @@ class SingletonClient;
 
 class SingletonDestroyer
 {
-    private:
-        SingletonClient * p_instance;
-    public:
-        ~SingletonDestroyer() { delete p_instance; }
-        void initialize(SingletonClient * p){p_instance = p;};
+private:
+    SingletonClient* p_instance;
+public:
+    ~SingletonDestroyer() {
+        delete p_instance;
+    }
+    void initialize(SingletonClient* p) {
+        p_instance = p;
+    };
 };
 
 
@@ -23,7 +27,7 @@ class SingletonClient : public QObject
 {
     Q_OBJECT
     private:
-        static SingletonClient * p_instance;
+        static SingletonClient* p_instance;
         static SingletonDestroyer destroyer;
         QTcpSocket * mTcpSocket;
     protected:
@@ -33,7 +37,7 @@ class SingletonClient : public QObject
         ~SingletonClient();
         friend class SingletonDestroyer;
     public:
-        static SingletonClient* getInstance();
+       static SingletonClient* getInstance();
        void send_msg_to_server(QString query);
     signals:
        void message_from_server(QString msg);

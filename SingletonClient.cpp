@@ -1,13 +1,16 @@
 #include "SingletonClient.h"
+#include <QDebug>
 
 SingletonClient::SingletonClient(QObject *parent) : QObject(parent){
     mTcpSocket = new QTcpSocket(this);
     mTcpSocket -> connectToHost("127.0.0.1",33333);
     connect(mTcpSocket, &QTcpSocket::readyRead,
             this, &SingletonClient::slotServerRead);
+    qDebug() << "Singletonclient()";
 
 }
 SingletonClient* SingletonClient::getInstance(){
+    qDebug() << "Singletonclient::getInst()";
     if (!p_instance)
         {
             p_instance = new SingletonClient();
