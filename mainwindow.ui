@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>661</width>
+    <height>467</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>661</width>
+      <height>411</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label_log">
+       <property name="text">
+        <string>&lt;html&gt;
+&lt;head/&gt;
+&lt;body&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+&lt;h1 style=&quot;color: blue&quot;&gt;Login&lt;br/&gt;&lt;/h1&gt;
+&lt;/div&gt;
+	
+&lt;/body&gt;
+&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>task1</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="text">
+          <string>task2</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_3">
+         <property name="text">
+          <string>task3</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_stat">
+         <property name="text">
+          <string>&lt;html&gt;
+&lt;head/&gt;
+&lt;body&gt;
+&lt;div style=&quot;text-align: center&quot;&gt;
+	&lt;h1 style=&quot;color: blue&quot;&gt;Statistic&lt;br/&gt;&lt;/h1&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 1&lt;br/&gt;&lt;/p&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 1&lt;br/&gt;&lt;/p&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 1&lt;br/&gt;&lt;/p&gt;
+&lt;/div&gt;
+	
+&lt;/body&gt;
+&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_4">
+         <property name="text">
+          <string>Exit</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>661</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="action_1"/>
+    <addaction name="action_2"/>
+    <addaction name="action_3"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_1">
+   <property name="text">
+    <string>Задание 1</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Задание 2</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Задание 3</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
