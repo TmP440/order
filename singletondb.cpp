@@ -17,17 +17,10 @@ void SingletonDB::openDB(){
 }
 
 
-//void SingletonDB::insertUser(QString login, QString password, int position_id){
-//    QSqlQuery query(db);
-//    query.prepare("INSERT INTO User (login, password, position_id) "
-//                  "VALUES (:login, :password, :position_id)");
-//    query.bindValue(":login", login);
-//    query.bindValue(":password", password);
-//    query.bindValue(":position_id", position_id);
-//
-//    if(!query.exec())
-//        qDebug()<<query.lastError().text();
-//}
+void SingletonDB::close(){
+    if(db.isOpen())
+        db.close();
+}
 
 
 void SingletonDB::createDB(){
@@ -50,27 +43,97 @@ SingletonDB* SingletonDB::getInstance() {
 void SingletonDB::createTables(){
     QSqlQuery query(db);
 
+
+    query.exec("CREATE TABLE IF NOT EXISTS data_user("
+               "user_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+               "login VARCHAR(30) NOT NULL,"
+               "password VARCHAR(30) NOT NULL,"
+               ")");
+
+
+    query.exec("CREATE TABLE IF NOT EXISTS task_name("
+               "login_user VARCHAR(30) PRIMARY KEY,"
+               "number_task int NOT NULL,"
+               "correctness int NOT NULL"
+               "FOREIGN KEY(login_user) REFERENCES data_user(login)"
+               ")");
+
+
     query.exec("CREATE TABLE IF NOT EXISTS name_user("
-               "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+               "login_user VARCHAR(30) PRIMARY KEY,"
                "surname VARCHAR(30) NOT NULL,"
                "firstname VARCHAR(30) NOT NULL,"
                "middle_name VARCHAR(30) NOT NULL,"
-               "role int NOT NULL"
+               "role int NOT NULL,"
+               "FOREIGN KEY(login_user) REFERENCES data_user(login)"
                ")");
 
-    query.exec("CREATE TABLE IF NOT EXISTS task_name("
-               "user_id bigint NOT NULL,"
-               "number_task int NOT NULL,"
-               "correctness int NOT NULL"
-               "FOREIGN KEY(user_id) REFERENCES name_user(user_id)"
-               ")");
 
-    query.exec("CREATE TABLE IF NOT EXISTS task_name("
-               "user_id bigint NOT NULL,"
-               "login VARCHAR(30) NOT NULL,"
-               "password VARCHAR(30) NOT NULL,"
-               "FOREIGN KEY(user_id) REFERENCES name_user(user_id)"
-               ")");
+}
+
+void SingletonDB::insertUser(QString login, QString password){
+    QSqlQuery query(db);
+        query.prepare("INSERT INTO data_user (login, password) "
+                      "VALUES (:login, :password)");
+        query.bindValue(":login", login);
+        query.bindValue(":password", password);
+
+
+        if(!query.exec())
+            qDebug()<<query.lastError().text();
+}
+
+
+bool SingletonDB::log_in(QString login, QString password){
+    QSqlQuery query(db);
+        query.prepare("SELECT COUNT(*) FROM data_user WHERE login = :login AND password = :password");
+        query.bindValue(":login", login);
+        query.bindValue(":password", password);
+        if (query.exec() && query.next()) {
+               int count = query.value(0).toInt();
+               return count > 0;
+        }
+        return false;
+}
+
+void SingletonDB::user_fio(QString login, QString surname, QString firstname, QString middle_name, int role){
+    QSqlQuery query(db);
+        query.prepare("INSERT INTO name_user (login, surname, firstname, middle_name, role) "
+                      "VALUES (:login, :password)");
+        query.bindValue(":login", login);
+        query.bindValue(":surname", surname);
+        query.bindValue(":firstname", firstname);
+        query.bindValue(":middle_name", middle_name);
+        query.bindValue(":role", role);
+
+
+        if(!query.exec())
+            qDebug()<<query.lastError().text();
+}
+
+bool SingletonDB::changePassword(QString login, QString oldPassword, QString newPassword){
+    QSqlQuery query(db);
+    bool ok = SingletonDB::log_in(login, oldPassword);
+    if (ok){
+        query.prepare("UPDATE name_user SET password = :newPassword WHERE user_id = :user_id");
+        query.bindValue(":newPassword", newPassword);
+        query.bindValue(":login", login);
+        return true;
+    }
+        if(!query.exec())
+            qDebug()<<query.lastError().text();
+    return false;
+}
+
+void SingletonDB::check_task(QString login, int num_task, int correct){
+    QSqlQuery query(db);
+    query.prepare("INSERT INTO task (login, num_task, correct) "
+                  "VALUES (:login, :num_task, :correct)");
+    query.bindValue(":login", login);
+    query.bindValue(":num_task", num_task);
+    query.bindValue(":correct", correct);
+    if(!query.exec())
+        qDebug()<<query.lastError().text();
 
 }
 
