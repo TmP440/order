@@ -89,11 +89,13 @@ bool SingletonDB::log_in(QString login, QString password){
         query.prepare("SELECT COUNT(*) FROM data_user WHERE login = :login AND password = :password");
         query.bindValue(":login", login);
         query.bindValue(":password", password);
-        if (query.exec() && query.next()) {
-               int count = query.value(0).toInt();
-               return count > 0;
+
+        if (!query.exec()) {
+            qDebug() << query.lastError().text();
+            return false;
         }
-        return false;
+
+        return true;
 }
 
 void SingletonDB::user_fio(QString login, QString surname, QString firstname, QString middle_name, int role){
@@ -115,7 +117,7 @@ bool SingletonDB::changePassword(QString login, QString oldPassword, QString new
     QSqlQuery query(db);
     bool ok = SingletonDB::log_in(login, oldPassword);
     if (ok){
-        query.prepare("UPDATE name_user SET password = :newPassword WHERE user_id = :user_id");
+        query.prepare("UPDATE data_user SET password = :newPassword WHERE user_id = :user_id");
         query.bindValue(":newPassword", newPassword);
         query.bindValue(":login", login);
         return true;
