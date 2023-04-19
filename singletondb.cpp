@@ -10,24 +10,24 @@ void SingletonDB::openDB(){
 
     qDebug()<<"MyDB()\n";
     db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName("encryptiz.sql");
+    db.setDatabaseName("MATH");
 
     if(!db.open())
         qDebug()<<db.lastError().text();
 }
 
 
-void SingletonDB::insertUser(QString login, QString password, int position_id){
-    QSqlQuery query(db);
-    query.prepare("INSERT INTO User (login, password, position_id) "
-                  "VALUES (:login, :password, :position_id)");
-    query.bindValue(":login", login);
-    query.bindValue(":password", password);
-    query.bindValue(":position_id", position_id);
-
-    if(!query.exec())
-        qDebug()<<query.lastError().text();
-}
+//void SingletonDB::insertUser(QString login, QString password, int position_id){
+//    QSqlQuery query(db);
+//    query.prepare("INSERT INTO User (login, password, position_id) "
+//                  "VALUES (:login, :password, :position_id)");
+//    query.bindValue(":login", login);
+//    query.bindValue(":password", password);
+//    query.bindValue(":position_id", position_id);
+//
+//    if(!query.exec())
+//        qDebug()<<query.lastError().text();
+//}
 
 
 void SingletonDB::createDB(){
@@ -36,6 +36,15 @@ void SingletonDB::createDB(){
     createTables();
 }
 
+
+SingletonDB* SingletonDB::getInstance() {
+    if (!p_instance)
+    {
+        p_instance = new SingletonDB();
+        destroyer.initialize(p_instance);
+    }
+    return p_instance;
+}
 
 
 void SingletonDB::createTables(){
@@ -64,3 +73,7 @@ void SingletonDB::createTables(){
                ")");
 
 }
+
+QSqlDatabase SingletonDB::db;
+SingletonDB* SingletonDB::p_instance;
+DatabaseDestroyer SingletonDB::destroyer;

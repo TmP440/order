@@ -24,27 +24,27 @@ class DatabaseDestroyer
 
 class SingletonDB
 {
-    private:
-        static SingletonDB * p_instance;
-        static DatabaseDestroyer destroyer;
+private:
+    static SingletonDB* p_instance;
+    static DatabaseDestroyer destroyer;
 
-        static QSqlDatabase db;
+    static QSqlDatabase db;
 
-        static void openDB();
-        static void createTables();
-        SingletonDB(){};
-        SingletonDB(const SingletonDB& ) = delete;
-        SingletonDB& operator = (SingletonDB &) = delete;
-        ~SingletonDB(){};
-        friend class DatabaseDestroyer;
+    static void openDB();
+    static void createTables();
+    SingletonDB() {};
+    SingletonDB(const SingletonDB&) = delete;
+    SingletonDB& operator = (SingletonDB&) = delete;
+    ~SingletonDB() {};
+    friend class DatabaseDestroyer;
 
-        static void generate_sevices();
-    public:
-        static SingletonDB* getInstance();
+public:
+    static SingletonDB* getInstance();
 
-        /// \brief createDB создаёт базу данных
-        /// \param void
-        /// \return void
-        static void createDB();
+    /// \brief createDB создаёт базу данных
+    /// \param void
+    /// \return void
+    static void createDB();
+};
 
 #endif // SINGLETONDB_H
