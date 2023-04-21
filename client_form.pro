@@ -11,15 +11,18 @@ CONFIG += c++17
 SOURCES += \
     authform.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    taskform.cpp
 
 HEADERS += \
     authform.h \
-    mainwindow.h
+    mainwindow.h \
+    taskform.h
 
 FORMS += \
     authform.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    taskform.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
