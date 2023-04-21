@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>661</width>
-    <height>467</height>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>661</width>
-      <height>411</height>
+      <height>469</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -62,6 +62,20 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_5">
+         <property name="text">
+          <string>task4</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_6">
+         <property name="text">
+          <string>task5</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
@@ -75,8 +89,10 @@
 &lt;div style=&quot;text-align: center&quot;&gt;
 	&lt;h1 style=&quot;color: blue&quot;&gt;Statistic&lt;br/&gt;&lt;/h1&gt;
 	&lt;p style=&quot;color: blue&quot;&gt;Stat 1&lt;br/&gt;&lt;/p&gt;
-	&lt;p style=&quot;color: blue&quot;&gt;Stat 1&lt;br/&gt;&lt;/p&gt;
-	&lt;p style=&quot;color: blue&quot;&gt;Stat 1&lt;br/&gt;&lt;/p&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 2&lt;br/&gt;&lt;/p&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 3&lt;br/&gt;&lt;/p&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 4&lt;br/&gt;&lt;/p&gt;
+	&lt;p style=&quot;color: blue&quot;&gt;Stat 5&lt;br/&gt;&lt;/p&gt; 
 &lt;/div&gt;
 	
 &lt;/body&gt;

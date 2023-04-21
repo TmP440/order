@@ -12,3 +12,14 @@ TaskForm::~TaskForm()
 {
     delete ui;
 }
+
+void TaskForm::on_pushButton_clicked()
+{
+    emit on_check(ui->line_task->text());
+    qDebug()<<"check";
+}
+
+void TaskForm::set_mode(QChar num)
+{
+    ui->labelTask->setText(QString::fromStdString("task").append(num));
+}

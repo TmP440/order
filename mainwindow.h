@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QDebug>
 #include "authform.h"
+#include "taskform.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -37,9 +38,14 @@ private slots:
 
     void slot_show(QString log);
 
+    void on_pushButton_5_clicked();
+
+    void on_pushButton_6_clicked();
+
 private:
     Ui::MainWindow *ui;
     AuthForm *ui_auth;
+    TaskForm *ui_task;
 };
 
 #endif // MAINWINDOW_H
