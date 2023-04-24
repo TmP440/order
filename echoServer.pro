@@ -1,6 +1,7 @@
 QT -= gui
 
 QT += network #Для работы с сетью
+QT += sql             
 
 
 CONFIG += c++11 console
@@ -20,7 +21,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     functions.cpp \
         main.cpp \
-    mytcpserver.cpp
+    mytcpserver.cpp \
+    singletondb.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -29,4 +31,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     functions.h \
-    mytcpserver.h
+    mytcpserver.h \
+    singletondb.h
