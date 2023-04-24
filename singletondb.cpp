@@ -11,6 +11,7 @@ void SingletonDB::openDB(){
     qDebug()<<"MyDB()\n";
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("../SingltetonTest/MATH"); //для qt
+    //db.setDatabaseName("MATH"); //для докера
 
     if(!db.open())
         qDebug()<<db.lastError().text();
