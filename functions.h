@@ -14,15 +14,16 @@
 QByteArray log_in(QString login, QString password);
 
 /// \brief log_out отвечает за выход из системы
+/// \param QString login
 /// \return QByteArray response
 ///
-QByteArray log_out();
+QByteArray log_out(QString login);
 
 /// \brief reg отвечает за регистрацию в системе
-/// \param QString login, QString password
+/// \param QString login, QString password, int conn_with
 /// \return QByteArray response
 ///
-QByteArray reg(QString login, QString password);
+QByteArray reg(QString login, QString password, int conn_with);
 
 /// \brief reg_fio отвечает за регистрацию ФИО и роли в системе
 /// \param QString login, QString surname, QString firstname, QString middle_name, int role
@@ -43,16 +44,33 @@ QByteArray invalid_request();
 QByteArray change_password(QString login, QString old_pass, QString new_pass);
 
 /// \brief check_task функция передает серверу информацию об ответе, 1 - правильно, 0 - неправильно
-/// \param QString login, int num_task, int correct
+/// \param QString login, QString num_task, QString correct
 /// \return QByteArray response
 ///
-QByteArray check_task(QString login, int num_task, int correct);
+QByteArray check_task(QString login, QString num_task, QString correct);
 
 /// \brief parsing отвечает за вызов различных функций в зависимости от введенной команды
 /// \param QString command
 /// \return QByteArray response
 ///
 QByteArray parsing(QString command);
+
+/// \brief show_commands функция, выводящая в сервер список команд и их аргументы
+/// \param
+/// \return QByteArray response
+QByteArray show_commands();
+
+/// \brief show_students_stats(QString login) выводит информацию об успеваемости ученика
+/// \param QString login
+/// \QByteArray response
+///
+QByteArray show_students_stats(QString login);
+
+/// \brief show_teacher_stats вывод статистики преподавателя
+/// \param QString login
+/// \return QByteArray respone
+///
+QByteArray show_teacher_stats(QString login);
 
 #endif // FUNCTIONS_H
 

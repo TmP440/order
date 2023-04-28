@@ -49,12 +49,12 @@ public:
 
 
     /// \brief insertUser добавляет пользователя в базу
-    /// \param QString login, QString password
+    /// \param QString login, QString password, int conn_with
     /// \return void
-    static void insertUser(QString login, QString password);
+    static void insertUser(QString login, QString password, int conn_with);
 
 
-    /// \brief user_fio добавление пользователю ФИО
+    /// \brief user_fio добавление пользователю ФИО, 0 - Преподаватель, 1 - Ученик
     /// \param QString login, QString surname, QString firstname, QString middle_name, int role
     /// \return void
     static void user_fio(QString login, QString surname, QString firstname, QString middle_name, int role);
@@ -72,11 +72,31 @@ public:
     static bool log_in(QString login, QString password);
 
 
-    /// \brief check_task функция передает серверу информацию об ответе, 1 - правильно, 0 - неправильно
-    /// \param QString login, int num_task, int correct
+    /// \brief check_login проврека уникальности логина
+    /// \param QString login
     /// \return bool
-    static void check_task(QString login, int num_task, int correct);
+    static bool check_login(QString login);
 
+
+    /// \brief log_out выход из системы
+    /// \param QString login
+    /// \return void
+    static void log_out(QString login);
+
+    /// \brief check_task функция передает серверу информацию об ответе, 1 - правильно, 0 - неправильно
+    /// \param QString login, QString num_task, QString correct
+    /// \return bool
+    static void check_task(QString login, QString num_task, QString correct);
+
+    /// \brief student_stats возвращает результат запроса со столбцами (номер задания, выполнено/не выполнено)
+    /// \param QString login
+    /// \return QList<QStringList>
+    static QList<QStringList> student_stats(QString login);
+
+    /// \brief teacher_stats возвращает результат запроса, в котором приведана таблица успеваемости учеников преподавателя
+    /// \param QString login
+    /// \return QList<QStringList>
+    static QList<QStringList> teacher_stats(QString login);
 
     /// \brief close закрывает базу данных
     /// \param void
