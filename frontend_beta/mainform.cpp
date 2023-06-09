@@ -120,3 +120,10 @@ void MainForm::sendToServer(QString str)
     out << quint16(data.size() - sizeof(quint16));
     socket->write(data);
 }
+
+void MainForm::on_pushButton_4_clicked()
+{
+    connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
+    sendToServer("external_sets 0");
+}
+

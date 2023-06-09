@@ -6,6 +6,7 @@
 #include <QByteArray>
 #include <QMap>
 #include <QStringList>
+#include <QVector>
 
 /// \brief log_in отвечает за вход
 /// \param QString login, QString password
@@ -86,6 +87,12 @@ QByteArray show_students_stats(QString login);
 /// \return QByteArray respone
 ///
 QByteArray show_teacher_stats(QString login);
+
+/// \brief externalStableSets вывод всех внешне устойчивых множеств в графе
+/// \param QString var
+/// \return QByteArray response
+///
+QByteArray externalStableSets(QString var);
 
 #endif // FUNCTIONS_H
 

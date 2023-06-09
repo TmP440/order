@@ -23,6 +23,8 @@ private slots:
 
     void on_pushButtonUpdateStat_clicked();
 
+    void on_pushButton_4_clicked();
+
 private:
     Ui::MainForm *ui;
     QTcpSocket *socket;
