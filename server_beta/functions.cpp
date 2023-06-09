@@ -75,40 +75,40 @@ private:
 //ind_task_oleg
 
 QByteArray externalStableSets(QString var) {
-    QString SETS[12] = {
+        QString SETS[4] = {
                          "(1,2),(1,3),(1,4),(2,3),(2,6),(2,7),(3,4),(3,5),(3,7),(5,6),(6,7)",
                          "(1,2),(1,4),(1,6),(1,7),(2,4),(2,6),(3,4),(3,5),(3,6),(3,7),(4,5),(5,6),(6,7)",
                          "(1,2),(1,3),(1,4),(1,7),(2,3),(2,4),(2,6),(3,4),(4,5),(4,6),(4,7)",
                          "(1,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,4),(4,7),(6,7)"};
 
-    QString ver = SETS[var.toInt()];
+        QString ver = SETS[var.toInt()];
 
-    ver.remove('(').remove(')');
-    QStringList edgeList = ver.split(',');
+        ver.remove('(').remove(')');
+        QStringList edgeList = ver.split(',');
 
-    int max_vertex = 0;
-    for (int k = 0; k < edgeList.size(); k += 2) {
-        int u = edgeList[k].toInt();
-        int v = edgeList[k + 1].toInt();
-        max_vertex = qMax(max_vertex, qMax(u, v));
-    }
+        int max_vertex = 0;
+        for (int k = 0; k < edgeList.size(); k += 2) {
+            int u = edgeList[k].toInt();
+            int v = edgeList[k + 1].toInt();
+            max_vertex = qMax(max_vertex, qMax(u, v));
+        }
 
-    // Инициализация матрицы смежности нулями
-    QVector<QVector<int>> adjacency_matrix(max_vertex + 1, QVector<int>(max_vertex + 1, 0));
+        // Инициализация матрицы смежности нулями
+        QVector<QVector<int>> adjacency_matrix(max_vertex + 1, QVector<int>(max_vertex + 1, 0));
 
-    // Заполняем матрицу смежности
-    for (int k = 0; k < edgeList.size(); k += 2) {
-        int u = edgeList[k].toInt();
-        int v = edgeList[k + 1].toInt();
-        adjacency_matrix[u][v] = 1;
-        adjacency_matrix[v][u] = 1;
-    }
+        // Заполняем матрицу смежности
+        for (int k = 0; k < edgeList.size(); k += 2) {
+            int u = edgeList[k].toInt();
+            int v = edgeList[k + 1].toInt();
+            adjacency_matrix[u][v] = 1;
+            adjacency_matrix[v][u] = 1;
+        }
 
-    OlegGraph graph(adjacency_matrix);
+        OlegGraph graph(adjacency_matrix);
 
-    QByteArray result = graph.findMaximalIndependentSets();
-    qDebug() << result;
-    return result;
+        QByteArray result = graph.findMaximalIndependentSets();
+        qDebug() << result;
+        return result;
 }
 
 QByteArray log_in(QString login, QString password){

@@ -1,6 +1,7 @@
 #include "mainform.h"
 #include "ui_mainform.h"
 #include <QMessageBox>
+#include <QRandomGenerator>
 
 MainForm::MainForm(QWidget *parent, QString login) :
     QMainWindow(parent),
@@ -65,11 +66,6 @@ void MainForm::getLogin(QString login)
     ui->labelStudLogin->setText(login);
 }
 
-void MainForm::on_pushButton_clicked()
-{
-
-}
-
 void MainForm::on_pushButtonUpdateStat_clicked()
 {
     connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
@@ -121,9 +117,28 @@ void MainForm::sendToServer(QString str)
     socket->write(data);
 }
 
-void MainForm::on_pushButton_4_clicked()
+
+void MainForm::on_pushButton_3_clicked()
 {
     connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
-    sendToServer("external_sets 0");
+    int var = QRandomGenerator::global()->bounded(0, 4);
+    sendToServer("external_sets " + QString::number(var));
+}
+
+void MainForm::on_pushButton_clicked()
+{
+
+}
+
+
+void MainForm::on_pushButton_5_clicked()
+{
+
+}
+
+
+void MainForm::on_pushButton_6_clicked()
+{
+
 }
 
