@@ -129,11 +129,69 @@ void MainForm::sendToServer(QString str)
 }
 
 // Task 2 button
+int random_vertices, random_edges;
+QString graf;
 void MainForm::on_pushButton_2_clicked()
 {
     ui->comboBoxAnswer->show();
     ui->labelTaskNum->setText("task_2");
     ui->labelTaskName->setText("Задание 2");
+    int choice;
+    choice = QRandomGenerator::global()->bounded(0, 2);
+    graf = "";
+    std::random_device rd;
+    std::default_random_engine rng(rd());
+    std::vector<std::pair<int, int>> edges;
+    std::vector<std::pair<int, int>> allEdges;
+    if (choice == 0)
+    {
+        random_vertices = QRandomGenerator::global()->bounded(3, 9);
+        //    int random_edges  = QRandomGenerator::global()->bounded((random_vertices - 1), ((random_vertices * (random_vertices - 1)) / 2));
+        random_edges  = ((random_vertices * (random_vertices - 1)) / 2);
+        for (int i = 0; i < random_vertices; i++)
+        {
+            for (int j = i + 1; j < random_vertices; j++)
+            {
+                allEdges.push_back(std::make_pair(i, j));
+            }
+        }
+        std::shuffle(allEdges.begin(), allEdges.end(), rng);
+        for (int i = 0; i < allEdges.size(); i++)
+        {
+            graf += QString::number(allEdges[i].first) + "-" + QString::number(allEdges[i].second) + "|";
+        }
+    }
+    else if (choice == 1)
+    {
+        std::vector<int> left_group;
+        std::vector<int> right_group;
+        random_vertices = QRandomGenerator::global()->bounded(3, 8);
+        int left_vertices = random_vertices / 2;
+        int right_vertices = random_vertices - left_vertices;
+        for (int i = 0; i < left_vertices; i++) {
+            left_group.push_back(i);
+        }
+        for (int i = left_vertices; i < random_vertices; i++) {
+            right_group.push_back(i);
+        }
+        std::vector<std::pair<int, int>> allEdges;
+        for (int i = 0; i < left_vertices; i++) {
+            for (int j = 0; j < right_vertices; j++) {
+                allEdges.push_back(std::make_pair(left_group[i], right_group[j]));
+            }
+        }
+        std::shuffle(allEdges.begin(), allEdges.end(), rng);
+        for (int i = 0; i < allEdges.size(); i++)
+        {
+            graf += QString::number(allEdges[i].first) + "-" + QString::number(allEdges[i].second) + "|";
+        }
+        random_edges  = allEdges.size();
+    }
+    ui->textBrowserTask->show();
+    ui->textBrowserTask->setText("Количество вершин графа (отсчёт вершин от 0) = " + QString::number(random_vertices) + "\n\rКоличество ребер графа = " + QString::number(random_edges)
+                                 + "\n\rСвязи вершин в графе = " + graf + "\n\rЯвляется ли данный граф двудольным?");
+    ui->lineEditAnswer->show();
+    ui->pushButtonAnswer->show();
 }
 
 // Task 3 button
@@ -187,8 +245,15 @@ void MainForm::on_pushButtonTask5_clicked()
 void MainForm::on_pushButtonAnswer_clicked()
 {
     if (ui->labelTaskNum->text() == "task_4")
-    connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-    sendToServer("task_4 " + ui->labelStudLogin->text() + " " + QString::number(numVertices) + " " + graf_task4 + " " + ui->lineEditAnswer->text());
+    {
+        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        sendToServer("task_4 " + ui->labelStudLogin->text() + " " + QString::number(numVertices) + " " + graf_task4 + " " + ui->lineEditAnswer->text());
+    }
+    else if (ui->labelTaskNum->text() == "task_2")
+    {
+        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        sendToServer("task_02 "+ ui->labelStudLogin->text() + " " + QString::number(random_vertices) + " " + QString::number(random_edges) + " " + graf + " " + ui->comboBoxAnswer->currentText());
+    }
 }
 
 void MainForm::slotCheckTask()

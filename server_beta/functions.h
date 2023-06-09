@@ -91,15 +91,21 @@ QByteArray show_students_stats(QString login);
 
 /// \brief show_teacher_stats вывод статистики преподавателя
 /// \param QString login
-/// \return QByteArray respone
+/// \return QByteArray response
 ///
 QByteArray show_teacher_stats(QString login);
 
-/// \brief task_4 вывод статистики преподавателя
+/// \brief task_4 решает задачу номер 4
 /// \param QString login, QString length, QString start, QString end, QString graf, QString answer
-/// \return QByteArray respone
+/// \return QByteArray response
 ///
 QByteArray task_4(QString login, QString length, QString graf, QString answer);
+
+/// \brief task_2 решает задачу номер 2
+/// \param QString login, QString numVertices, QString numEdges, QString connections, QString answer
+/// \return QByteArray response
+///
+QByteArray task_2(QString login, QString numVertices, QString numEdges, QString connections, QString answer);
 
 #endif // FUNCTIONS_H
 

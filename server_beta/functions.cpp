@@ -210,6 +210,79 @@ QByteArray task_4(QString login, QString length, QString graf, QString answer)
         return "0";
 }
 
+QByteArray task_2(QString login, QString numVertices, QString numEdges, QString connections, QString answer)
+{
+    class Graph {
+        int V; // Количество вершин
+        std::vector<std::vector<int>> adjList; // Список смежности
+
+    public:
+        Graph(int v) {
+            V = v;
+            adjList.resize(V);
+        }
+
+        void addEdge(int u, int v) {
+            adjList[u].push_back(v);
+            adjList[v].push_back(u);
+        }
+
+        bool isBipartite() {
+            std::vector<int> color(V, -1); // Цвета вершин (-1: не покрашена, 0: цвет 1, 1: цвет 2)
+
+            for (int i = 0; i < V; ++i) {
+                if (color[i] == -1) {
+                    // Запускаем поиск в ширину для новой компоненты связности
+                    std::queue<int> q;
+                    q.push(i);
+                    color[i] = 0;
+
+                    while (!q.empty()) {
+                        int u = q.front();
+                        q.pop();
+
+                        for (int v : adjList[u]) {
+                            if (color[v] == -1) {
+                                color[v] = 1 - color[u];
+                                q.push(v);
+                            } else if (color[v] == color[u]) {
+                                return false; // Найден цикл нечетной длины, граф не двудольный
+                            }
+                        }
+                    }
+                }
+            }
+            return true; // Граф является двудольным
+        }
+    };
+    int V = numVertices.toInt();
+    Graph graph(V);
+    QStringList parts_connections = connections.left(connections.length()).split("|");
+    for (int i = 0; i < parts_connections.length() - 1; i++)
+    {
+        int u, v = 0;
+        QStringList pairs = parts_connections[i].left(parts_connections.length()).split("-");
+        u = pairs[0].toInt();
+        v = pairs[1].toInt();
+        graph.addEdge(u, v);
+    }
+    if (graph.isBipartite() == 1 && answer == "Да")
+    {
+        check_task(login, "2", "1");
+        return "1";
+
+    }
+    else if (graph.isBipartite() == 0 && answer == "Нет")
+    {
+        check_task(login, "2", "1");
+        return "1";
+    }
+    else
+    {
+        return "0";
+    }
+}
+
 QByteArray parsing(QString command){
     QStringList parts = command.left(command.length()).split(" ");
     //QStringList parts = command.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
@@ -227,5 +300,6 @@ QByteArray parsing(QString command){
     else if (parts[0] == "wctm") return who_connected_to_me(parts[1]);
     else if (parts[0] == "getid") return getID(parts[1]);
     else if (parts[0] == "task_4") return task_4(parts[1], parts[2], parts[3], parts[4]);
+    else if (parts[0] == "task_02") return task_2(parts[1], parts[2], parts[3], parts[4], parts[5]);
     else return invalid_request();
 }
