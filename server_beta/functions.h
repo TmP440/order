@@ -107,5 +107,11 @@ QByteArray task_4(QString login, QString length, QString graf, QString answer);
 ///
 QByteArray task_2(QString login, QString numVertices, QString numEdges, QString connections, QString answer);
 
+/// \brief task_1 решает задачу номер 1
+/// \param QString login, QString answer
+/// \return QByteArray response
+///
+QByteArray task_1(QString login, QString answer);
+
 #endif // FUNCTIONS_H
 
