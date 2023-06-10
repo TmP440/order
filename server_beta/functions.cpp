@@ -117,27 +117,6 @@ QByteArray show_commands(){
                       "show_stud_stats [login]\r\n");
 }
 
-QByteArray task_1(QString login, QString answer) {
-
-    QList<QString> dif_answers = {
-        "1,4,1,5,1,6,2,4,2,5,2,6,3,4,3,5,3,6,",
-        "1,4,1,5,1,6,2,4,2,5,2,6,3,4,3,5,3,6",
-        "1,5,1,6,1,7,1,8,1,9,2,5,2,6,2,7,2,8,2,9,3,5,3,6,3,7,3,8,3,9,4,5,4,6,4,7,4,8,4,9,",
-        "1,5,1,6,1,7,1,8,1,9,2,5,2,6,2,7,2,8,2,9,3,5,3,6,3,7,3,8,3,9,4,5,4,6,4,7,4,8,4,9",
-        "1,3,1,4,2,3,2,4,",
-        "1,3,1,4,2,3,2,4"
-    };
-    for (int i = 0; i < dif_answers.size(); i++)
-    {
-        if (answer == dif_answers[i])
-        {
-            check_task(login, "1", "1");
-            return "1";
-        }
-    }
-    return "0";
-}
-
 QByteArray task_4(QString login, QString length, QString graf, QString answer)
 {
 
@@ -304,6 +283,106 @@ QByteArray task_2(QString login, QString numVertices, QString numEdges, QString 
     }
 }
 
+QByteArray task_3(QString login, QString numVertices, QString connections, QString answer) {
+    class OlegGraph {
+    public:
+        OlegGraph(const QVector<QVector<int>>& adjacencyMatrix) : adjMatrix(adjacencyMatrix) {}
+
+        QByteArray findMaximalIndependentSets() {
+            QByteArray result;
+            findMaximalIndependentSetsUtil(result, {}, 0);
+            return result;
+        }
+
+    private:
+        QVector<QVector<int>> adjMatrix;
+
+        void findMaximalIndependentSetsUtil(QByteArray &result, QVector<int> currentSet, int vertex) {
+            if (vertex == adjMatrix.size()) {
+                if (isMaximal(currentSet)) {
+                    result.append(setToString(currentSet));
+                }
+                return;
+            }
+
+            // Exclude the current vertex
+            findMaximalIndependentSetsUtil(result, currentSet, vertex + 1);
+
+            // Include the current vertex if it is independent
+            bool isIndependent = true;
+            for (int i = 0; i < adjMatrix.size(); ++i) {
+                if (adjMatrix[vertex][i] && std::find(currentSet.begin(), currentSet.end(), i) != currentSet.end()) {
+                    isIndependent = false;
+                    break;
+                }
+            }
+            if (isIndependent) {
+                currentSet.push_back(vertex);
+                findMaximalIndependentSetsUtil(result, currentSet, vertex + 1);
+            }
+        }
+
+        bool isMaximal(const QVector<int>& set) {
+            for (int u = 0; u < adjMatrix.size(); ++u) {
+                if (std::find(set.begin(), set.end(), u) == set.end()) {
+                    bool isNeighbor = false;
+                    for (int v : set) {
+                        if (adjMatrix[u][v]) {
+                            isNeighbor = true;
+                            break;
+                        }
+                    }
+                    if (!isNeighbor) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        QByteArray setToString(const QVector<int>& set) {
+            QByteArray setString = "|";
+            for (int vertex : set) {
+                setString.append(QByteArray::number(vertex));
+            }
+            setString.append("|");
+            return setString;
+        }
+    };
+    //QString SETS[4] = {
+    //                   "(1,2),(1,3),(1,4),(2,3),(2,6),(2,7),(3,4),(3,5),(3,7),(5,6),(6,7)",
+    //                   "(1,2),(1,4),(1,6),(1,7),(2,4),(2,6),(3,4),(3,5),(3,6),(3,7),(4,5),(5,6),(6,7)",
+    //                   "(1,2),(1,3),(1,4),(1,7),(2,3),(2,4),(2,6),(3,4),(4,5),(4,6),(4,7)",
+    //                   "(1,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,4),(4,7),(6,7)"};
+
+    connections.remove('(').remove(')');
+    QStringList edgeList = connections.split(',');
+
+    int n = numVertices.toInt();
+
+    // Инициализация матрицы смежности нулями
+    QVector<QVector<int>> adjacency_matrix(n + 1, QVector<int>(n + 1, 0));
+
+    // Заполняем матрицу смежности
+    for (int k = 0; k < edgeList.size(); k += 2) {
+        int u = edgeList[k].toInt();
+        int v = edgeList[k + 1].toInt();
+        adjacency_matrix[u][v] = 1;
+        adjacency_matrix[v][u] = 1;
+    }
+
+    OlegGraph graph(adjacency_matrix);
+
+    QByteArray result = graph.findMaximalIndependentSets();
+    qDebug() << result;
+
+    if(result == answer){
+        check_task(login, "3", "1");
+    }
+
+    return result;
+}
+
 QByteArray parsing(QString command){
     QStringList parts = command.left(command.length()).split(" ");
     //QStringList parts = command.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
@@ -320,8 +399,8 @@ QByteArray parsing(QString command){
     else if (parts[0] == "ccw") return check_connected_with(parts[1]);
     else if (parts[0] == "wctm") return who_connected_to_me(parts[1]);
     else if (parts[0] == "getid") return getID(parts[1]);
-    else if (parts[0] == "task_1") return task_1(parts[1], parts[2]);
     else if (parts[0] == "task_4") return task_4(parts[1], parts[2], parts[3], parts[4]);
     else if (parts[0] == "task_02") return task_2(parts[1], parts[2], parts[3], parts[4], parts[5]);
+    else if (parts[0] == "task_3") return task_3(parts[1], parts[2], parts[3], parts[4]);
     else return invalid_request();
 }

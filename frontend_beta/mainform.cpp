@@ -67,6 +67,16 @@ void MainForm::getLogin(QString login)
     ui->labelStudLogin->setText(login);
 }
 
+// Task 1 button
+void MainForm::on_pushButton_clicked()
+{
+    if (ui->comboBoxAnswer->isVisible())
+        ui->comboBoxAnswer->hide();
+    ui->labelTaskNum->setText("task_1");
+    ui->labelTaskName->setText("Задание 1");
+
+}
+
 void MainForm::on_pushButtonUpdateStat_clicked()
 {
     connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
@@ -116,31 +126,6 @@ void MainForm::sendToServer(QString str)
     out.device()->seek(0);
     out << quint16(data.size() - sizeof(quint16));
     socket->write(data);
-}
-
-// Task 1 button
-void MainForm::on_pushButton_clicked()
-{
-    if (ui->comboBoxAnswer->isVisible())
-        ui->comboBoxAnswer->hide();
-    ui->labelTaskNum->setText("task_1");
-    ui->labelTaskName->setText("Задание 1");
-
-    QList<QString> zads = {
-        "Построить систему представителей двудольного графа.\nN1 = {1, 2, 3}\nN2 = {4, 5, 6}",
-        "Построить систему представителей двудольного графа.\nN1 = {1, 2, 3, 4}\nN2 = {5, 6, 7, 8, 9}",
-        "Построить систему представителей двудольного графа.\nN1 = {1, 2}\nN2 = {3, 4}"
-    };
-
-    QRandomGenerator::securelySeeded();
-
-    // Генерация случайного числа в диапазоне [N, M]
-    int randomNum = QRandomGenerator::global()->bounded(0, 3);
-
-    ui->textBrowserTask->setText(zads[randomNum] +
-                            "\n В ответе указать ответ в порядке N1i N2j. То есть для N1 = {1, 2}, N2 = {3, 4}"
-                            "правильным ответом\n будет 1,3,1,4,2,3,2,4");
-
 }
 
 // Task 2 button
@@ -209,6 +194,9 @@ void MainForm::on_pushButton_2_clicked()
     ui->pushButtonAnswer->show();
 }
 
+
+int n;
+QString graf_3;
 // Task 3 button
 void MainForm::on_pushButton_3_clicked()
 {
@@ -217,7 +205,24 @@ void MainForm::on_pushButton_3_clicked()
     ui->labelTaskNum->setText("task_3");
     ui->labelTaskName->setText("Задание 3");
 
+    graf_3 = "";
+    n = QRandomGenerator::global()->bounded(5, 10);
+    for (int i = 0; i < n; i++)
+    {
+        int count = 0;
+        for (int j = i + 1; j < n; j++)
+        {
+            graf_3 =  graf_3 + QString::number(i) + "," + QString::number(j) + "|";
+            count++;
+            if (count == 2)
+                break;
+        }
+    }
+    graf_3.chop(1);
+
+    ui->textBrowserTask->setText("Найдите все внешне устойчивые множества в графе:\nКоличество вершин " + QString::number(n-1) + " (отчет вершин от 0)\nРебра (Откуда исходит, куда направлено)\n" + graf_3 + "\nПример ввода ответа: |123||045|");
 }
+
 
 int numVertices;
 QString  graf_task4 = "";
@@ -259,20 +264,20 @@ void MainForm::on_pushButtonTask5_clicked()
 
 void MainForm::on_pushButtonAnswer_clicked()
 {
-    if (ui->labelTaskNum->text() == "task_1")
+    if (ui->labelTaskNum->text() == "task_4")
     {
         connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_1 " + ui->labelStudLogin->text() + " " + ui->lineEditAnswer->text());
+        sendToServer("task_4 " + ui->labelStudLogin->text() + " " + QString::number(numVertices) + " " + graf_task4 + " " + ui->lineEditAnswer->text());
     }
     else if (ui->labelTaskNum->text() == "task_2")
     {
         connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
         sendToServer("task_02 "+ ui->labelStudLogin->text() + " " + QString::number(random_vertices) + " " + QString::number(random_edges) + " " + graf + " " + ui->comboBoxAnswer->currentText());
     }
-    else if (ui->labelTaskNum->text() == "task_4")
+    else if (ui->labelTaskNum->text() == "task_3")
     {
         connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_4 " + ui->labelStudLogin->text() + " " + QString::number(numVertices) + " " + graf_task4 + " " + ui->lineEditAnswer->text());
+        sendToServer("task_3 "+ ui->labelStudLogin->text() + " " + QString::number(n) + " " + graf_3 + " " + ui->comboBoxAnswer->currentText());
     }
 }
 
