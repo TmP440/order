@@ -107,11 +107,22 @@ QByteArray task_4(QString login, QString length, QString graf, QString answer);
 ///
 QByteArray task_2(QString login, QString numVertices, QString numEdges, QString connections, QString answer);
 
+/// \brief task_1 решает задачу номер 1
+/// \param QString login, QString answer
+/// \return QByteArray response
+///
+QByteArray task_1(QString login, QString answer);
+
 /// \brief task_3 решает задачу номер 3
 /// \param QString login, QString numVertices, QString connections, QString answer
 /// \return QByteArray response
 ///
 QByteArray task_3(QString login, QString numVertices, QString connections, QString answer);
 
+/// \brief task_5 решает задачу номер 5
+/// \param QString login, QString e1, QString str1
+/// \return QByteArray response
+///
+QByteArray task_5(QString login, QString e1, QString str1);
 #endif // FUNCTIONS_H
 

@@ -117,6 +117,27 @@ QByteArray show_commands(){
                       "show_stud_stats [login]\r\n");
 }
 
+QByteArray task_1(QString login, QString answer) {
+
+    QList<QString> dif_answers = {
+        "1,4,1,5,1,6,2,4,2,5,2,6,3,4,3,5,3,6,",
+        "1,4,1,5,1,6,2,4,2,5,2,6,3,4,3,5,3,6",
+        "1,5,1,6,1,7,1,8,1,9,2,5,2,6,2,7,2,8,2,9,3,5,3,6,3,7,3,8,3,9,4,5,4,6,4,7,4,8,4,9,",
+        "1,5,1,6,1,7,1,8,1,9,2,5,2,6,2,7,2,8,2,9,3,5,3,6,3,7,3,8,3,9,4,5,4,6,4,7,4,8,4,9",
+        "1,3,1,4,2,3,2,4,",
+        "1,3,1,4,2,3,2,4"
+    };
+    for (int i = 0; i < dif_answers.size(); i++)
+    {
+        if (answer == dif_answers[i])
+        {
+            check_task(login, "1", "1");
+            return "1";
+        }
+    }
+    return "0";
+}
+
 QByteArray task_4(QString login, QString length, QString graf, QString answer)
 {
 
@@ -383,6 +404,88 @@ QByteArray task_3(QString login, QString numVertices, QString connections, QStri
     return result;
 }
 
+QByteArray task_5(QString login, QString e1, QString str1){
+    int i, j, N;
+    // Варианты
+    std::string E[12] = {
+                         "(1,2),(1,3),(1,5),(1,6),(2,3),(2,4),(2,6),(3,4),(3,5),(4,5),(4,6),(5,6). ",
+                         "(1,4),(1,5),(1,6),(1,7),(2,4),(2,7),(3,4),(3,5),(3,6),(3,7),(4,7),(5,6). ",
+                         "(1,2),(1,3),(1,4),(1,6),(2,3),(3,4),(3,6),(4,5),(4,6),(5,6). ",
+                         "(1,2),(1,3),(1,5),(1,6),(2,4),(3,4),(3,5),(3,6),(4,5),(4,6),(5,6). ",
+                         "(1,4),(1,5),(1,6),(1,7),(2,3),(2,4),(2,7),(3,4),(3,7),(4,5),(6,7). ",
+                         "(1,2),(1,3),(1,5),(1,6),(2,3),(2,4),(2,6),(3,4),(3,5),(4,5),(4,6),(5,6). ",
+                         "(1,2),(1,3),(1,4),(1,5),(2,4),(2,6),(2,7),(3,4),(4,5),(5,6),(5,7),(6,7). ",
+                         "(1,2),(1,3),(1,6),(1,7),(2,3),(2,5),(2,6),(3,4),(3,7),(4,7),(5,6),(6,7). ",
+                         "(1,2),(1,3),(1,5),(1,6),(2,5),(2,6),(3,7),(4,6),(4,7),(6,7). ",
+                         "(1,2),(1,3),(1,5),(1,7),(2,6),(3,4),(3,6),(3,7),(4,5),(4,6),(4,7),(6,7). ",
+                         "(1,2),(1,4),(1,5),(1,6),(2,3),(2,4),(2,7),(3,4),(3,5),(3,7),(4,5),(4,6),(4,7),(5,6),(6,7). ",
+                         "(1,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,4),(3,5),(3,7),(4,5),(4,6),(4,7),(5,6),(5,7). " };
+    int e = e1.toInt();
+    std::string ver = E[e];
+    // Ввод размера матрицы
+    N = 7;
+    // выделение памяти для матриц
+    int** a = new int*[N];
+    for (i = 0; i < N; i++) {
+        a[i] = new int[N];
+    }
+
+    // добавление нулей в матрицу
+    for (i = 0; i < N; i++)
+        for (j = 0; j < N; j++)
+        {
+            a[i][j] = 0;
+        }
+    int ver1; int ver2; // доп переменные для матрицы
+    for (i = 1; ver[i] != '\0'; i += 6)
+    {
+        //cout << ver[i] << " " << ver[i+2] << endl;
+        ver1 = (int)(ver[i]-49); // с помощью таблицы anci
+        ver2 = (int)(ver[i+2]-49);
+        //cout << ver1 << " " << ver2 << endl;
+        a[ver1][ver2] = 1;
+        a[ver2][ver1] = 1;
+    }
+    long long  revstr = 0;
+    long long str = str1.toLongLong();
+    while (str) // переворачиваем список
+    {
+        revstr = revstr * 10 + str % 10;
+        str /= 10;
+    }
+    //cout <<"Перевернутый список" << "\n";
+    //cout << revstr << endl;
+    int m1 = revstr % 10-1;
+    revstr /= 10;
+    int m2;
+    while (revstr) // обнуление столбцов
+    {
+        m2 = revstr % 10 - 1;
+        if (a[m1][m2] == 0) {
+            return "0";
+            m1 = 100;
+            break;
+        }
+        for (i = 0; i < N; i++) // обнуляем столбец, больше в него не можем прийти
+        {
+            a[i][m2] = 0;
+        }
+        revstr /= 10;
+        m1 = m2;
+    }
+    //cou(N, a);
+    int sum = 0;
+    for (i = 0; i < N; i++) { // проверка что всеь массив равен нулю
+        for (j = 0; j < N; j++)
+        {
+            sum += a[i][j];
+        }
+    }
+    if (m1 == 100);
+    else if (sum == 0) {        SingletonDB::check_task(login, "5", "1");               return "1";}
+    else                return "0";
+}
+
 QByteArray parsing(QString command){
     QStringList parts = command.left(command.length()).split(" ");
     //QStringList parts = command.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
@@ -399,8 +502,10 @@ QByteArray parsing(QString command){
     else if (parts[0] == "ccw") return check_connected_with(parts[1]);
     else if (parts[0] == "wctm") return who_connected_to_me(parts[1]);
     else if (parts[0] == "getid") return getID(parts[1]);
+    else if (parts[0] == "task_1") return task_1(parts[1], parts[2]);
     else if (parts[0] == "task_4") return task_4(parts[1], parts[2], parts[3], parts[4]);
     else if (parts[0] == "task_02") return task_2(parts[1], parts[2], parts[3], parts[4], parts[5]);
     else if (parts[0] == "task_3") return task_3(parts[1], parts[2], parts[3], parts[4]);
+    else if (parts[0] == "task_5") return task_5(parts[1], parts[2], parts[3]);
     else return invalid_request();
 }
