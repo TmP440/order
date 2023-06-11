@@ -166,3 +166,12 @@ void prepform::on_pushButtonExit_clicked()
     this->close();
 }
 
+bool sort = false;
+void prepform::on_toolButton_clicked()
+{
+    sort = !sort;
+    qDebug() << sort;
+    connect(socket, &QTcpSocket::readyRead, this, &prepform::slotComboBoxStudents);
+    sendToServer("sort_stud_stats " + ui->comboBoxStudents->currentText() + " " + QString::number(sort));
+}
+

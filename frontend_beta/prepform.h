@@ -25,6 +25,10 @@ private slots:
 
     void on_pushButtonExit_clicked();
 
+    void on_pushButtonSort_clicked();
+
+    void on_toolButton_clicked();
+
 private:
     Ui::prepform *ui;
     QTcpSocket *socket;

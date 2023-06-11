@@ -486,6 +486,42 @@ QByteArray task_5(QString login, QString e1, QString str1){
     else                return "0";
 }
 
+bool ascending_sort(const QStringList& a, const QStringList& b)
+{
+    return a[1].toInt() > b[1].toInt();
+}
+
+bool descending_sort(const QStringList& a, const QStringList& b)
+{
+    return a[1].toInt() < b[1].toInt();
+}
+
+QByteArray sort_stats(QString login, QString sort_type)
+{
+    QList<QStringList> records = SingletonDB::student_stats(login);
+    QString result = "\r\nНомер\tОценка\r\n";
+    if (sort_type == "1")
+    {
+        std::sort(records.begin(), records.end(), ascending_sort);
+    }
+    else if (sort_type == "0")
+    {
+        std::sort(records.begin(), records.end(), descending_sort);
+    }
+    if (!records.isEmpty())
+    {
+        for (int i = 0; i < records.size(); i++)
+        {
+            QString task_num = records[i][0];
+            QString is_correct = records[i][1];
+            result += task_num + "\t" + is_correct + "\r\n";
+        }
+        QByteArray to_console = result.toUtf8();
+        return to_console.append("\r\nСтатистика ученика: ").append(login.toUtf8()).append("\r\n");
+    }
+    else return QByteArray("Невозможно вывести статистику ученика: ").append(login.toUtf8()).append("\r\n");
+}
+
 QByteArray parsing(QString command){
     QStringList parts = command.left(command.length()).split(" ");
     //QStringList parts = command.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
@@ -507,5 +543,6 @@ QByteArray parsing(QString command){
     else if (parts[0] == "task_02") return task_2(parts[1], parts[2], parts[3], parts[4], parts[5]);
     else if (parts[0] == "task_3") return task_3(parts[1], parts[2], parts[3], parts[4]);
     else if (parts[0] == "task_5") return task_5(parts[1], parts[2], parts[3]);
+    else if (parts[0] == "sort_stud_stats") return sort_stats(parts[1], parts[2]);
     else return invalid_request();
 }

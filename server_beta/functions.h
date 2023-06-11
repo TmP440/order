@@ -10,6 +10,7 @@
 #include <limits>
 #include <vector>
 #include <QRandomGenerator>
+#include <algorithm>
 
 /// \brief log_in отвечает за вход
 /// \param QString login, QString password
@@ -124,5 +125,10 @@ QByteArray task_3(QString login, QString numVertices, QString connections, QStri
 /// \return QByteArray response
 ///
 QByteArray task_5(QString login, QString e1, QString str1);
+
+
+
+
+QByteArray sort_stats(QString login, QString sort_type);
 #endif // FUNCTIONS_H
 
