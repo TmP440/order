@@ -1,5 +1,6 @@
 #include "mainform.h"
 #include "ui_mainform.h"
+#include "singletonclient.h"
 #include <QMessageBox>
 
 MainForm::MainForm(QWidget *parent, QString login) :
@@ -10,11 +11,11 @@ MainForm::MainForm(QWidget *parent, QString login) :
     ui->labelStudLogin->setText(login);
     ui->labelTaskNum->hide();
     ui->comboBoxAnswer->hide();
-    socket = new QTcpSocket(this);
-    socket->connectToHost("127.0.0.1", 4747);
-    nextBlockSize = 0;
-    connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotGetId);
-    sendToServer("getid " + ui->labelStudLogin->text());
+    singletonClient::Get().singletonClient::Get().socket = new QTcpSocket(this);
+    singletonClient::Get().singletonClient::Get().socket->connectToHost("127.0.0.1", 4747);
+    singletonClient::Get().nextBlockSize = 0;
+    connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotGetId);
+    singletonClient::Get().sendToServer("getid " + ui->labelStudLogin->text());
 }
 
 MainForm::~MainForm()
@@ -24,41 +25,15 @@ MainForm::~MainForm()
 
 void MainForm::closeEvent (QCloseEvent *event)
 {
-    sendToServer("logout " + ui->labelStudLogin->text());
+    singletonClient::Get().sendToServer("logout " + ui->labelStudLogin->text());
     event->accept();
 }
 
 void MainForm::slotGetId()
 {
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_6_4);
-    if(in.status() == QDataStream::Ok)
-    {
-        for(;;)
-        {
-            if(nextBlockSize == 0)
-            {
-                if(socket->bytesAvailable() < 2)
-                {
-                    break;
-                }
-                in >> nextBlockSize;
-            }
-            if(socket->bytesAvailable() < nextBlockSize)
-            {
-                break;
-            }
-            QString str;
-            in >> str;
-            nextBlockSize = 0;
-            ui->label_id->setText(str);
-        }
-    }
-    else
-    {
-        QMessageBox::information(this, "подключение", "ошибка в slotGetID datastream in");
-    }
-    disconnect(socket, &QTcpSocket::readyRead, this, &MainForm::slotGetId);
+    singletonClient::Get().QDataIn();
+    ui->label_id->setText(singletonClient::Get().str);
+    disconnect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotGetId);
     on_pushButtonUpdateStat_clicked();
 }
 
@@ -69,56 +44,20 @@ void MainForm::getLogin(QString login)
 
 void MainForm::on_pushButtonUpdateStat_clicked()
 {
-    connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
-    sendToServer("show_stud_stats " + ui->labelStudLogin->text());
+    connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
+    singletonClient::Get().sendToServer("show_stud_stats " + ui->labelStudLogin->text());
 }
 
 void MainForm::slotButtonUpdateStat()
 {
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_6_4);
-    if(in.status() == QDataStream::Ok)
+    singletonClient::Get().QDataIn();
+    if (singletonClient::Get().str != "")
     {
-        for(;;)
-        {
-            if(nextBlockSize == 0)
-             {
-                if(socket->bytesAvailable() < 2)
-                {
-                    break;
-                }
-                in >> nextBlockSize;
-            }
-            if(socket->bytesAvailable() < nextBlockSize)
-            {
-                break;
-            }
-
-            QString str;
-            in >> str;
-            nextBlockSize = 0;
-            ui->textBrowserStudStat->setText(str);
-        }
+        ui->textBrowserStudStat->setText(singletonClient::Get().str);
+        disconnect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
     }
-    else
-    {
-        QMessageBox::information(this, "подключение", "ошибка при подключении");
-    }
-    disconnect(socket, &QTcpSocket::readyRead, this, &MainForm::slotButtonUpdateStat);
 }
 
-void MainForm::sendToServer(QString str)
-{
-    data.clear();
-    QDataStream out(&data, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_6_4);
-    out << quint16(0) << str;
-    //out.device()->seek(0);
-    //out << quint16(data.size() - sizeof(quint16));
-    socket->write(data);
-}
-
-// Task 1 button
 void MainForm::on_pushButton_clicked()
 {
     if (ui->comboBoxAnswer->isVisible())
@@ -295,64 +234,40 @@ void MainForm::on_pushButtonAnswer_clicked()
 {
     if (ui->labelTaskNum->text() == "task_1")
     {
-        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_1 " + ui->labelStudLogin->text() + " " + ui->lineEditAnswer->text());
+        connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        singletonClient::Get().sendToServer("task_1 " + ui->labelStudLogin->text() + " " + ui->lineEditAnswer->text());
     }
     else if (ui->labelTaskNum->text() == "task_2")
     {
-        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_02 "+ ui->labelStudLogin->text() + " " + QString::number(random_vertices) + " " + QString::number(random_edges) + " " + graf + " " + ui->comboBoxAnswer->currentText());
+        connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        singletonClient::Get().sendToServer("task_02 "+ ui->labelStudLogin->text() + " " + QString::number(random_vertices) + " " + QString::number(random_edges) + " " + graf + " " + ui->comboBoxAnswer->currentText());
     }
     else if (ui->labelTaskNum->text() == "task_4")
     {
-        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_4 " + ui->labelStudLogin->text() + " " + QString::number(numVertices) + " " + graf_task4 + " " + ui->lineEditAnswer->text());
+        connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        singletonClient::Get().sendToServer("task_4 " + ui->labelStudLogin->text() + " " + QString::number(numVertices) + " " + graf_task4 + " " + ui->lineEditAnswer->text());
     }
     else if (ui->labelTaskNum->text() == "task_3")
     {
-        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_3 "+ ui->labelStudLogin->text() + " " + QString::number(n) + " " + graf_3 + " " + ui->comboBoxAnswer->currentText());
+        connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        singletonClient::Get().sendToServer("task_3 "+ ui->labelStudLogin->text() + " " + QString::number(n) + " " + graf_3 + " " + ui->comboBoxAnswer->currentText());
     }
     else if (ui->labelTaskNum->text() == "task_5")
     {
-        connect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
-        sendToServer("task_5 "+ ui->labelStudLogin->text() + " " + QString::number(random_vertices) + " " + ui->lineEditAnswer->text());
+        connect(singletonClient::Get().singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
+        singletonClient::Get().sendToServer("task_5 "+ ui->labelStudLogin->text() + " " + QString::number(random_vertices) + " " + ui->lineEditAnswer->text());
     }
 }
 
 void MainForm::slotCheckTask()
 {
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_6_4);
-    if(in.status() == QDataStream::Ok)
+    singletonClient::Get().QDataIn();
+    if (singletonClient::Get().str != "")
     {
-        for(;;)
-        {
-            if(nextBlockSize == 0)
-             {
-                if(socket->bytesAvailable() < 2)
-                {
-                    break;
-                }
-                in >> nextBlockSize;
-            }
-            if(socket->bytesAvailable() < nextBlockSize)
-            {
-                break;
-            }
-
-            QString str;
-            in >> str;
-            nextBlockSize = 0;
-            if (str == "1")
-                QMessageBox::information(this, "Задание", "Задание выполнено верно!");
-            else
-                QMessageBox::information(this, "Задание", "Задание выполнено неверно!");
-        }
+        if (singletonClient::Get().str == "1")
+            QMessageBox::information(this, "Задание", "Задание выполнено верно!");
+        else
+            QMessageBox::information(this, "Задание", "Задание выполнено неверно!");
+        disconnect(singletonClient::Get().singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
     }
-    else
-    {
-        QMessageBox::information(this, "подключение", "ошибка при подключении");
-    }
-    disconnect(socket, &QTcpSocket::readyRead, this, &MainForm::slotCheckTask);
 }

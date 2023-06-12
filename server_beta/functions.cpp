@@ -522,6 +522,106 @@ QByteArray sort_stats(QString login, QString sort_type)
     else return QByteArray("Невозможно вывести статистику ученика: ").append(login.toUtf8()).append("\r\n");
 }
 
+QByteArray sort_by_task_desk(QString login)
+{
+    QList<QStringList> records = SingletonDB::sort_by_task_desk(login);
+    QString result = "\r\nЛогин\tФИ\t\tВыполнено\r\n";
+    if (!records.isEmpty())
+    {
+        QByteArray to_console = "\r\nСтатистика учеников:\r\n";
+        for (int i = 0; i < records.size(); i++)
+        {
+            QString logn = records[i][0];
+            QString fi = records[i][1];
+            QString is_correct_sum = records[i][2];
+            result += logn + "\t" + fi;
+            for (int i = fi.length(); i < 25; i++)
+            {
+                result += " ";
+            }
+            result += "\t" + is_correct_sum + "\r\n";
+        }
+        to_console += result.toUtf8();
+        return to_console;
+    }
+    else return QByteArray("Невозможно вывести статистику учеников\r\n");
+}
+
+QByteArray sort_by_task(QString login)
+{
+    QList<QStringList> records = SingletonDB::sort_by_task(login);
+    QString result = "\r\nЛогин\tФИ\t\tВыполнено\r\n";
+    if (!records.isEmpty())
+    {
+        QByteArray to_console = "\r\nСтатистика учеников:\r\n";
+        for (int i = 0; i < records.size(); i++)
+        {
+            QString logn = records[i][0];
+            QString fi = records[i][1];
+            QString is_correct_sum = records[i][2];
+            result += logn + "\t" + fi;
+            for (int i = fi.length(); i < 25; i++)
+            {
+                result += " ";
+            }
+            result += "\t" + is_correct_sum + "\r\n";
+        }
+        to_console += result.toUtf8();
+        return to_console;
+    }
+    else return QByteArray("Невозможно вывести статистику учеников\r\n");
+}
+
+QByteArray sort_by_fi(QString login)
+{
+    QList<QStringList> records = SingletonDB::sort_by_fi(login);
+    QString result = "\r\nЛогин\tФИ\t\tВыполнено\r\n";
+    if (!records.isEmpty())
+    {
+        QByteArray to_console = "\r\nСтатистика учеников:\r\n";
+        for (int i = 0; i < records.size(); i++)
+        {
+            QString logn = records[i][0];
+            QString fi = records[i][1];
+            QString is_correct_sum = records[i][2];
+            result += logn + "\t" + fi;
+            for (int i = fi.length(); i < 25; i++)
+            {
+                result += " ";
+            }
+            result += "\t" + is_correct_sum + "\r\n";
+        }
+        to_console += result.toUtf8();
+        return to_console;
+    }
+    else return QByteArray("Невозможно вывести статистику учеников\r\n");
+}
+
+QByteArray sort_by_fi_desc(QString login)
+{
+    QList<QStringList> records = SingletonDB::sort_by_fi_desc(login);
+    QString result = "\r\nЛогин\tФИ\t\tВыполнено\r\n";
+    if (!records.isEmpty())
+    {
+        QByteArray to_console = "\r\nСтатистика учеников:\r\n";
+        for (int i = 0; i < records.size(); i++)
+        {
+            QString logn = records[i][0];
+            QString fi = records[i][1];
+            QString is_correct_sum = records[i][2];
+            result += logn + "\t" + fi;
+            for (int i = fi.length(); i < 25; i++)
+            {
+                result += " ";
+            }
+            result += "\t" + is_correct_sum + "\r\n";
+        }
+        to_console += result.toUtf8();
+        return to_console;
+    }
+    else return QByteArray("Невозможно вывести статистику учеников\r\n");
+}
+
 QByteArray parsing(QString command){
     QStringList parts = command.left(command.length()).split(" ");
     //QStringList parts = command.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
@@ -544,5 +644,9 @@ QByteArray parsing(QString command){
     else if (parts[0] == "task_3") return task_3(parts[1], parts[2], parts[3], parts[4]);
     else if (parts[0] == "task_5") return task_5(parts[1], parts[2], parts[3]);
     else if (parts[0] == "sort_stud_stats") return sort_stats(parts[1], parts[2]);
+    else if (parts[0] == "sort_by_task_desk") return sort_by_task_desk(parts[1]);
+    else if (parts[0] == "sort_by_task") return sort_by_task(parts[1]);
+    else if (parts[0] == "sort_by_fi") return sort_by_fi(parts[1]);
+    else if (parts[0] == "sort_by_fi_desc") return sort_by_fi_desc(parts[1]);
     else return invalid_request();
 }

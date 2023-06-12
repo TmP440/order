@@ -12,6 +12,11 @@ public:
     QTcpSocket *socket;
     QVector <QTcpSocket*> sockets;
     QByteArray data;
+
+    /// \brief SendToClient Отправляет данные клиенту
+    /// \param QString login
+    /// \return QByteArray
+    ///
     void SendToClient(QString str);
     quint16 nextBlockSize;
 
