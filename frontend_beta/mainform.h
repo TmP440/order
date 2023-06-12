@@ -21,6 +21,10 @@ class MainForm : public QMainWindow
 public:
     explicit MainForm(QWidget *parent = nullptr, QString login = "null");
     ~MainForm();
+    /// \brief getLogin возвращает логин пользователя
+    /// \param
+    /// \return
+    ///
     void getLogin(QString login);
 
 private slots:
@@ -68,10 +72,6 @@ private slots:
 
 private:
     Ui::MainForm *ui;
-    QTcpSocket *socket;
-    QByteArray data;
-    void sendToServer(QString str);
-    quint16 nextBlockSize;
     void closeEvent(QCloseEvent *event);
 public slots:
     void slotButtonUpdateStat();

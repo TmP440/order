@@ -286,6 +286,114 @@ QString SingletonDB::getID(QString login)
     }
 }
 
+QList<QStringList> SingletonDB::sort_by_task_desk(QString login)
+{
+    QList<QStringList> rows;
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM (SELECT login, surname || ' ' || firstname AS fi, SUM(correctness) AS cnt "
+                  "FROM data_user, name_user, task_name "
+                  "WHERE data_user.login = name_user.login_user "
+                  "AND task_name.login_user = data_user.login "
+                  "GROUP BY login, fi "
+                  "ORDER BY SUM(correctness) DESC) "
+                  "WHERE login IN "
+                  "(SELECT login FROM data_user "
+                  "WHERE (SELECT user_id FROM data_user WHERE login = :login) = connected_with)");
+    query.bindValue(":login", login);
+    if(query.exec())
+    {
+        while (query.next()) {
+            QStringList row;
+            row << query.value("login").toString();
+            row << query.value("fi").toString();
+            row << query.value("cnt").toString();
+            rows.append(row);
+        }
+    }
+    return rows;
+}
+
+QList<QStringList> SingletonDB::sort_by_task(QString login)
+{
+    QList<QStringList> rows;
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM (SELECT login, surname || ' ' || firstname AS fi, SUM(correctness) AS cnt "
+                  "FROM data_user, name_user, task_name "
+                  "WHERE data_user.login = name_user.login_user "
+                  "AND task_name.login_user = data_user.login "
+                  "GROUP BY login, fi "
+                  "ORDER BY SUM(correctness)) "
+                  "WHERE login IN "
+                  "(SELECT login FROM data_user "
+                  "WHERE (SELECT user_id FROM data_user WHERE login = :login) = connected_with)");
+    query.bindValue(":login", login);
+    if(query.exec())
+    {
+        while (query.next()) {
+            QStringList row;
+            row << query.value("login").toString();
+            row << query.value("fi").toString();
+            row << query.value("cnt").toString();
+            rows.append(row);
+        }
+    }
+    return rows;
+}
+
+QList<QStringList> SingletonDB::sort_by_fi(QString login)
+{
+    QList<QStringList> rows;
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM (SELECT login, surname || ' ' || firstname AS fi, SUM(correctness) AS cnt "
+                  "FROM data_user, name_user, task_name "
+                  "WHERE data_user.login = name_user.login_user "
+                  "AND task_name.login_user = data_user.login "
+                  "GROUP BY login, fi "
+                  "ORDER BY fi) "
+                  "WHERE login IN "
+                  "(SELECT login FROM data_user "
+                  "WHERE (SELECT user_id FROM data_user WHERE login = :login) = connected_with)");
+    query.bindValue(":login", login);
+    if(query.exec())
+    {
+        while (query.next()) {
+            QStringList row;
+            row << query.value("login").toString();
+            row << query.value("fi").toString();
+            row << query.value("cnt").toString();
+            rows.append(row);
+        }
+    }
+    return rows;
+}
+
+QList<QStringList> SingletonDB::sort_by_fi_desc(QString login)
+{
+    QList<QStringList> rows;
+    QSqlQuery query(db);
+    query.prepare("SELECT * FROM (SELECT login, surname || ' ' || firstname AS fi, SUM(correctness) AS cnt "
+                  "FROM data_user, name_user, task_name "
+                  "WHERE data_user.login = name_user.login_user "
+                  "AND task_name.login_user = data_user.login "
+                  "GROUP BY login, fi "
+                  "ORDER BY fi DESC) "
+                  "WHERE login IN "
+                  "(SELECT login FROM data_user "
+                  "WHERE (SELECT user_id FROM data_user WHERE login = :login) = connected_with)");
+    query.bindValue(":login", login);
+    if(query.exec())
+    {
+        while (query.next()) {
+            QStringList row;
+            row << query.value("login").toString();
+            row << query.value("fi").toString();
+            row << query.value("cnt").toString();
+            rows.append(row);
+        }
+    }
+    return rows;
+}
+
 QSqlDatabase SingletonDB::db;
 SingletonDB* SingletonDB::p_instance;
 DatabaseDestroyer SingletonDB::destroyer;

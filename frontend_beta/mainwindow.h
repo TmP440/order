@@ -60,13 +60,8 @@ private:
     Ui::MainWindow *ui;
     MainForm *m;
     prepform *p;
-    QByteArray data;
-    quint16 nextBlockSize;
-    QTcpSocket *socket;
-    void sendToServer(QString str);
 public slots:
     void slotAuth();
-    void slotReadyRead();
     void slotReg();
     void slotRegFio();
 };

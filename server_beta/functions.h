@@ -126,9 +126,33 @@ QByteArray task_3(QString login, QString numVertices, QString connections, QStri
 ///
 QByteArray task_5(QString login, QString e1, QString str1);
 
-
-
-
+/// \brief sort_stats Выводит выполненные студентом задачи в отсортированном порядке
+/// \param QString login
+/// \return QByteArray
+///
 QByteArray sort_stats(QString login, QString sort_type);
-#endif // FUNCTIONS_H
 
+/// \brief sort_by_task_desk Выводит список студентов и количество выполненных ими заданий(по убыванию)
+/// \param QString login
+/// \return QByteArray
+///
+QByteArray sort_by_task_desk(QString login);
+
+/// \brief sort_by_task Выводит список студентов и количество выполненных ими заданий(по возрастанию)
+/// \param QString login
+/// \return QByteArray
+///
+QByteArray sort_by_task(QString login);
+
+/// \brief sort_by_fi Выводит список студентов и количество выполненных ими заданий по алфавиту
+/// \param QString login
+/// \return QByteArray
+///
+QByteArray sort_by_fi(QString login);
+
+/// \brief sort_by_fi_desc Выводит список студентов и количество выполненных ими заданий по алфавиту в оьратном порядке
+/// \param QString login
+/// \return QByteArray
+///
+QByteArray sort_by_fi_desc(QString login);
+#endif // FUNCTIONS_H

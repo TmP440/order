@@ -12,12 +12,14 @@ SOURCES += \
     main.cpp \
     mainform.cpp \
     mainwindow.cpp \
-    prepform.cpp
+    prepform.cpp \
+    singletonclient.cpp
 
 HEADERS += \
     mainform.h \
     mainwindow.h \
-    prepform.h
+    prepform.h \
+    singletonclient.h
 
 FORMS += \
     mainform.ui \

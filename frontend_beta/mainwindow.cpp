@@ -1,5 +1,6 @@
 #include "ui_mainwindow.h"
 #include "mainwindow.h"
+#include "singletonclient.h"
 #include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -31,9 +32,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->labelFio->setGeometry(ui->labelLogin->x(), ui->labelLogin->y(), ui->labelFio->width(), ui->labelFio->height());
     ui->lineEditFio->setGeometry(ui->lineEditLogin->x(), ui->lineEditLogin->y(), ui->lineEditFio->width(), ui->lineEditFio->height());
 
-    socket = new QTcpSocket(this);
-    socket->connectToHost("127.0.0.1", 4747);
-    nextBlockSize = 0;
+    singletonClient::Get().socket = new QTcpSocket(this);
+    singletonClient::Get().socket->connectToHost("127.0.0.1", 4747);
+    singletonClient::Get().nextBlockSize = 0;
 }
 
 MainWindow::~MainWindow()
@@ -41,76 +42,39 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::sendToServer(QString str)
-{
-    data.clear();
-    QDataStream out(&data, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_6_4);
-    out << quint16(0) << str;
-    out.device()->seek(0);
-    out << quint16(data.size() - sizeof(quint16));
-    socket->write(data);
-}
-
-
 void MainWindow::on_AuthButton_clicked()
 {
-    connect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotAuth);
-    sendToServer("login " + ui->lineEditLogin->text() + " " + ui->lineEditPassword->text());
+    connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotAuth);
+    singletonClient::Get().sendToServer("login " + ui->lineEditLogin->text() + " " + ui->lineEditPassword->text());
 }
 
 
 void MainWindow::slotAuth()
 {
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_6_4);
-    if(in.status() == QDataStream::Ok)
-    {
-        for(;;)
+    singletonClient::Get().QDataIn();
+    QStringList parts = singletonClient::Get().str.split(" ");
+    qDebug() << parts;
+        if(parts[0] == "1")
         {
-            if(nextBlockSize == 0)
+            if (parts[1] == "-1")
             {
-                if(socket->bytesAvailable() < 2)
-                {
-                    break;
-                }
-                in >> nextBlockSize;
+                p = new prepform(this, ui->lineEditLogin->text());
+                this->hide();
+                p->show();
             }
-            if(socket->bytesAvailable() < nextBlockSize)
+            else
             {
-                break;
-            }
-
-            QString str;
-            in >> str;
-            nextBlockSize = 0;
-            QStringList parts = str.left(str.length()).split(" ");
-            if(parts[0] == "1")
-            {
-                if (parts[1] == "-1")
-                {
-                    p = new prepform(this, ui->lineEditLogin->text());
-                    this->hide();
-                    p->show();
-                }
-                else
-                {
-                    m = new MainForm(this, ui->lineEditLogin->text());
-                    this->hide();
-                    m->show();
-                }
-            }
-            else if(parts[0] == "0")
-            {
-                QMessageBox::information(this, "авторизация", "неверно введен логин или пароль");
+                m = new MainForm(this, ui->lineEditLogin->text());
+                this->hide();
+                m->show();
             }
         }
-    }
-    else
-    {
-        QMessageBox::information(this, "подключение", "ошибка при подключении");
-    }
-    disconnect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotAuth);
+        else if(parts[0] == "0")
+        {
+            QMessageBox::information(this, "авторизация", "неверно введен логин или пароль");
+        }
+
+    disconnect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotAuth);
 }
 
 
@@ -167,46 +131,11 @@ void MainWindow::on_toAuthButton_clicked()
     ui->groupBox->setTitle("Авторизация");
 }
 
-
-void MainWindow::slotReadyRead()
-{
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_6_4);
-    if(in.status() == QDataStream::Ok)
-    {
-        QString str;
-        for(;;)
-        {
-            if(nextBlockSize == 0)
-            {
-                if(socket->bytesAvailable() < 2)
-                {
-                    break;
-                }
-                in >> nextBlockSize;
-            }
-            if(socket->bytesAvailable() < nextBlockSize)
-            {
-                break;
-            }
-
-            QString str;
-            in >> str;
-            nextBlockSize = 0;
-        }
-        QMessageBox::information(this, "подключение", str);
-    }
-    else
-    {
-        QMessageBox::information(this, "подключение", "ошибка при подключении");
-    }
-}
-
 void MainWindow::on_RegButton_clicked()
 {
     if ((ui->labelFio->text() != "") and (ui->labelLogin->text() != "") and (ui->labelPassword->text() != ""))
     {
-        connect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotReg);
+        connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotReg);
         QString prepID;
         if(ui->comboBoxStatus->currentText() == "Студент")
         {
@@ -216,7 +145,7 @@ void MainWindow::on_RegButton_clicked()
         {
             prepID = "-1";
         }
-        sendToServer("reg " + ui->lineEditLogin->text() + " " + ui->lineEditPassword->text() + " " + prepID);
+        singletonClient::Get().sendToServer("reg " + ui->lineEditLogin->text() + " " + ui->lineEditPassword->text() + " " + prepID);
     }
     else
     {
@@ -226,62 +155,40 @@ void MainWindow::on_RegButton_clicked()
 
 void MainWindow::slotReg()
 {
-    QDataStream in(socket);
-    in.setVersion(QDataStream::Qt_6_4);
-    if(in.status() == QDataStream::Ok)
+    singletonClient::Get().QDataIn();
+    if (singletonClient::Get().str != "")
     {
-        for(;;)
+    if(singletonClient::Get().str == "1")
+    {
+        QString role;
+        if(ui->comboBoxStatus->currentText() == "Студент")
         {
-            if(nextBlockSize == 0)
-            {
-                if(socket->bytesAvailable() < 2)
-                {
-                    break;
-                }
-                in >> nextBlockSize;
-            }
-            if(socket->bytesAvailable() < nextBlockSize)
-            {
-                break;
-            }
-
-            QString str;
-            in >> str;
-            nextBlockSize = 0;
-            if(str == "1")
-            {
-                QString role;
-                if(ui->comboBoxStatus->currentText() == "Студент")
-                {
-                    role = "1";
-                }
-                else
-                {
-                    role = "0";
-                }
-                disconnect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotReg);
-                connect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotRegFio);
-                QStringList parts = ui->lineEditFio->text().split(" ");
-                sendToServer("reg_fio " + ui->lineEditLogin->text() + " " + parts[0] + " " + parts[1] + " " + parts[2] + " " + role);
-            }
-            else
-            {
-                QMessageBox::information(this, "регистрация", "ошибка");
-            }
+            role = "1";
         }
+        else
+        {
+            role = "0";
+        }
+        disconnect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotReg);
+        connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotRegFio);
+        QStringList parts = ui->lineEditFio->text().split(" ");
+        singletonClient::Get().sendToServer("reg_fio " + ui->lineEditLogin->text() + " " + parts[0] + " " + parts[1] + " " + parts[2] + " " + role);
     }
     else
     {
-        QMessageBox::information(this, "подключение", "ошибка при подключении");
+        QMessageBox::information(this, "регистрация", "ошибка");
     }
-    disconnect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotReg);
+    disconnect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotReg);
+    }
 }
 
 void MainWindow::slotRegFio()
 {
-    disconnect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotRegFio);
-    connect(socket, &QTcpSocket::readyRead, this, &MainWindow::slotAuth);
-    sendToServer("login " + ui->lineEditLogin->text() + " " + ui->lineEditPassword->text());
+    singletonClient::Get().QDataIn();
+    singletonClient::Get().str = "";
+    disconnect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotRegFio);
+    connect(singletonClient::Get().socket, &QTcpSocket::readyRead, this, &MainWindow::slotAuth);
+    singletonClient::Get().sendToServer("login " + ui->lineEditLogin->text() + " " + ui->lineEditPassword->text());
 }
 
 void MainWindow::on_comboBoxStatus_currentTextChanged(const QString &arg1)

@@ -41,36 +41,30 @@ private:
 public:
     static SingletonDB* getInstance();
 
-
     /// \brief createDB создаёт базу данных
     /// \param void
     /// \return void
     static void createDB();
-
 
     /// \brief insertUser добавляет пользователя в базу
     /// \param QString login, QString password, int conn_with
     /// \return void
     static void insertUser(QString login, QString password, int conn_with);
 
-
     /// \brief user_fio добавление пользователю ФИО, 0 - Преподаватель, 1 - Ученик
     /// \param QString login, QString surname, QString firstname, QString middle_name, int role
     /// \return void
     static void user_fio(QString login, QString surname, QString firstname, QString middle_name, int role);
-
 
     /// \brief changePassword изменяет пароль пользователя для входа
     /// \param QString login, QString oldPassword, QString newPassword
     /// \return bool
     static bool changePassword(QString login, QString oldPassword, QString newPassword);
 
-
     /// \brief log_in вход в аккаунт
     /// \param QString login, QString password
     /// \return bool
     static bool log_in(QString login, QString password);
-
 
     /// \brief check_connected_with проверяет к кому привязан пользователь
     /// \param QString login
@@ -118,6 +112,26 @@ public:
     /// \param void
     /// \return void
     static void close();
+
+    /// \brief sort_by_task_desk Выводит список студентов и количество выполненных ими заданий по убыванию
+    /// \param QString login
+    /// \return QList<QStringList>
+    static QList<QStringList> sort_by_task_desk(QString login);
+
+    /// \brief sort_by_task Выводит список студентов и количество выполненных ими заданий по возрастанию
+    /// \param QString login
+    /// \return QList<QStringList>
+    static QList<QStringList> sort_by_task(QString login);
+
+    /// \brief sort_by_fi Выводит список студентов и количество выполненных ими заданий по алфавиту
+    /// \param QString login
+    /// \return QList<QStringList>
+    static QList<QStringList> sort_by_fi(QString login);
+
+    /// \brief sort_by_fi_desc Выводит список студентов и количество выполненных ими заданий по алфавиту в обратном порядке
+    /// \param QString login
+    /// \return QList<QStringList>
+    static QList<QStringList> sort_by_fi_desc(QString login);
 };
 
 #endif // SINGLETONDB_H

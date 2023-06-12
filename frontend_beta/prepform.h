@@ -19,22 +19,44 @@ public:
     void getLogin(QString login);
 
 private slots:
+    /// \brief on_pushButtonUpdateStat_clicked обновляет статистику
+    /// \param
+    /// \return
+    ///
     void on_pushButtonUpdateStat_clicked();
 
+    /// \brief on_comboBoxStudents_currentTextChanged при выборе студента из списка, вывод его статистики
+    /// \param
+    /// \return
+    ///
     void on_comboBoxStudents_currentTextChanged(const QString &arg1);
 
+    /// \brief on_pushButtonExit_clicked выход из программы
+    /// \param
+    /// \return
+    ///
     void on_pushButtonExit_clicked();
 
-    void on_pushButtonSort_clicked();
-
+    /// \brief on_toolButton_clicked сортировка данных по убыванию/возрастанию
+    /// \param
+    /// \return
+    ///
     void on_toolButton_clicked();
+
+    /// \brief on_toolButton_clicked сортировка данных по алфавиту
+    /// \param
+    /// \return
+    ///
+    void on_toolButton_2_clicked();
+
+    /// \brief on_toolButton_clicked сортировка данных по количеству выполненных заданий
+    /// \param
+    /// \return
+    ///
+    void on_toolButton_3_clicked();
 
 private:
     Ui::prepform *ui;
-    QTcpSocket *socket;
-    QByteArray data;
-    void sendToServer(QString str);
-    quint16 nextBlockSize;
     void closeEvent(QCloseEvent *event);
 public slots:
     void slotComboBoxStatLoad();
